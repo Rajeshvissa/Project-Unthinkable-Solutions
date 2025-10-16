@@ -1,23 +1,6 @@
-// @ts-check  // optional: enables VS Code type-checking for JS
 
-/**
- * @typedef {Object} TaskDraft
- * @property {string} title
- * @property {string=} description
- * @property {number} estimateDays
- * @property {string[]=} dependsOn
- */
-
-/**
- * Schedule tasks by dependency order, compute start/end dates.
- * If targetDate provided, try back-planning by shifting.
- * @param {TaskDraft[]} tasks
- * @param {Date=} targetDate
- */
 export function scheduleTasks(tasks, targetDate) {
   const titleToTask = new Map(tasks.map(t => [t.title, { ...t }]));
-
-  // Build graph
   const indeg = new Map();
   const adj = new Map();
   for (const t of tasks) {
@@ -31,7 +14,6 @@ export function scheduleTasks(tasks, targetDate) {
     }
   }
 
-  // Kahn topo
   const q = [...Array.from(indeg.keys())].filter(k => (indeg.get(k) || 0) === 0);
   const order = [];
   while (q.length) {
@@ -79,3 +61,4 @@ export function scheduleTasks(tasks, targetDate) {
     endDate: info.get(t.title).end
   }));
 }
+
