@@ -22,7 +22,6 @@ export async function updateTask(req, res, next) {
     const { taskId } = req.params;
     const patch = req.body || {};
     if (patch.dependsOn) {
-      // make sure they're ObjectIds
       patch.dependsOn = patch.dependsOn
         .map(id => new mongoose.Types.ObjectId(id));
     }
@@ -40,3 +39,4 @@ export async function deleteGoal(req, res, next) {
     res.json({ ok: true });
   } catch (e) { next(e); }
 }
+
