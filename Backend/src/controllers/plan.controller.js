@@ -18,7 +18,6 @@ export async function createPlan(req, res, next) {
       targetDate: targetDate ? new Date(targetDate) : undefined
     });
 
-    // Insert tasks and map titles → _id
     const idByTitle = new Map();
     for (const t of scheduled) {
       const created = await Task.create({
@@ -33,7 +32,6 @@ export async function createPlan(req, res, next) {
       idByTitle.set(t.title, created._id);
     }
 
-    // Resolve dependsOn to ObjectIds
     for (const t of scheduled) {
       const depIds = (t.dependsOn || []).map(d => idByTitle.get(d)).filter(Boolean);
       await Task.updateOne({ goalId: goal._id, title: t.title }, { $set: { dependsOn: depIds } });
@@ -45,3 +43,4 @@ export async function createPlan(req, res, next) {
     next(err);
   }
 }
+
